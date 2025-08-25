@@ -16,6 +16,7 @@ export default function Svgify() {
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
     const [ svgContent, setSvgContent ] = useState<string | null>(null);
     const [ name, setName ] = useState<string>("");
+    const [ generatedCode, setGeneratedCode ] = useState<string>("");
     const [ fillColor, setFillColor ] = useState("#000000");
     const [ strokeColor, setStrokeColor ] = useState("#000000");
 
@@ -25,6 +26,39 @@ export default function Svgify() {
       reader.onload = (e) => setSvgContent(e.target?.result as string);
       reader.readAsText(file);
       setSelectedFile(file);
+    };
+
+    const handleCopy = () => {
+      if (!generatedCode) return;
+      navigator.clipboard.writeText(generatedCode);
+    };
+
+    interface GenerateCodeProps {
+        svg: string;
+        fill: string;
+        stroke: string;
+    }
+
+    const generateCode = ({ svg, fill, stroke }: GenerateCodeProps): string => {
+        let jsx = svg
+            .replace(/fill="[^"]*"/g, 'fill={fillColor}')
+            .replace(/stroke="[^"]*"/g, 'stroke={strokeColor}')
+            .replace(/<([a-z]+)([^>]*)><\/\1>/gi, '<$1$2 />')
+            .replace(/\bclass=/g, 'className=');
+        return `
+import React from "react";
+
+export default function ${name || selectedFile?.name}({ fillColor = "${fill}", strokeColor = "${stroke}" }: { fillColor?: string; strokeColor?: string }) {
+  return (
+    ${jsx}
+  );
+}`;
+    };
+
+    const handleGenerateCode = () => {
+      if (!svgContent) return;
+      const code = generateCode({ svg: svgContent, fill: fillColor, stroke: strokeColor });
+      setGeneratedCode(code);
     };
 
     return (
@@ -183,17 +217,21 @@ export default function Svgify() {
                             </CardHeader>
                             <CardContent>
                                 <Button variant="outline" className="mb-3 mr-3 cursor-pointer 
-                                    bg-green-400 hover:bg-green-500">
+                                    bg-green-400 hover:bg-green-500"
+                                    onClick={handleGenerateCode}>
                                     <Copy /> Generate Code
                                 </Button>
 
-                                <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70">
+                                <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70"
+                                onClick={handleCopy}>
                                     <Copy /> Copy
                                 </Button>
                                 <div className="w-full min-h-68 rounded-md flex flex-col justify-center items-center gap-4">
                                     <textarea
-                                        className="w-full min-h-68 p-2 focus:ring-2 text-sm font-mono ring-green-500 rounded-md focus:outline-none duration-100 transition"
+                                        className="w-full min-h-68 px-2 pb-5 focus:ring-2 text-sm font-mono ring-green-500 
+                                            rounded-md focus:outline-none duration-100 transition"
                                         placeholder="Generated code will appear here..."
+                                        value={generatedCode}
                                         readOnly
                                     />
                                 </div>
@@ -204,7 +242,7 @@ export default function Svgify() {
             </div>
 
             {/* Footer */}
-            <footer className="mt-auto text-right p-2 opacity-50">
+            <footer className="mt-auto text-right md:m-4 m-2 opacity-50">
                 <a href="https://dafbeh.xyz" target="_blank" rel="noreferrer">
                     dafbeh 2025
                 </a>
