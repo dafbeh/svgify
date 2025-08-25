@@ -14,8 +14,17 @@ import { Upload, FileImage, Eye, Layers, Palette, Code, Copy } from 'lucide-reac
 
 export default function Svgify() {
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
+    const [svgContent, setSvgContent] = useState<string | null>(null);
     const [ fillColor, setFillColor ] = useState("#000000");
     const [ strokeColor, setStrokeColor ] = useState("#000000");
+
+    const handleFile = (file: File) => {
+      if (!file.type.includes("svg")) return;
+      const reader = new FileReader();
+      reader.onload = (e) => setSvgContent(e.target?.result as string);
+      reader.readAsText(file);
+      setSelectedFile(file);
+    };
 
     return (
         <>
@@ -43,7 +52,7 @@ export default function Svgify() {
                                 <div
                                     className="w-full text-center h-68 rounded-md border-2 border-dashed hover:border-green-500 duration-100 transition-all cursor-pointer flex flex-col justify-center items-center gap-4"
                                 >
-                                    <FileDropZone onFileSelect={setSelectedFile}>
+                                    <FileDropZone onFileSelect={handleFile}>
                                     <FileImage strokeWidth={1.75} size="50" />
                                     <h1 className="font-bold text-md">Drop your SVG file here</h1>
                                     <p className="mb-1">or click to browse</p>
@@ -55,10 +64,10 @@ export default function Svgify() {
                                 {selectedFile && 
                                     <div className="text-center px-5 py-5 mt-5 
                                         w-full border-2 rounded-lg w-full">
-                                        <div className="flex w-full justify-between">
+                                        <div className="flex w-full justify-between font-medium">
                                             <h1>{selectedFile.name}</h1>
                                             <button className="px-2 py-1 border-2 duration-100 
-                                                rounded-full text-xs">
+                                                rounded-full text-xs font-bold">
                                                 Uploaded
                                             </button>
                                         </div>
@@ -79,12 +88,16 @@ export default function Svgify() {
                                 <div className="w-full min-h-68 rounded-md flex flex-col justify-center 
                                     items-center gap-4">
                                     {selectedFile ? (
-                                        <div className="flex h-64 w-64 pt-15 items-center justify-center">
-                                          <img
-                                            src={URL.createObjectURL(selectedFile)}
-                                            alt="SVG Preview"
-                                          />
-                                        </div>
+                                    <div
+                                      className="flex h-64 w-64 pt-15 items-center justify-center"
+                                      dangerouslySetInnerHTML={{
+                                        __html: svgContent
+                                          ? svgContent
+                                              .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
+                                              .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`)
+                                          : "",
+                                      }}
+                                    />
                                     ) : (
                                       <>
                                         <Layers strokeWidth={1.75} size={50} />
@@ -159,6 +172,11 @@ export default function Svgify() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
+                                <Button variant="outline" className="mb-3 mr-3 cursor-pointer 
+                                    bg-green-400 hover:bg-green-500">
+                                    <Copy /> Generate Code
+                                </Button>
+
                                 <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70">
                                     <Copy /> Copy
                                 </Button>

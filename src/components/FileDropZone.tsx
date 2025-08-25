@@ -14,11 +14,21 @@ export default function FileDropZone({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleFiles = (files: FileList | null) => {
-    if (files && files.length > 0) {
-      onFileSelect(files[0]);
-    }
-  };
+    const handleFiles = (files: FileList | null) => {
+      if (!files || files.length === 0) return;
+
+      const file = files[0];
+
+      if (
+        file.type !== "image/svg+xml" && 
+        !file.name.toLowerCase().endsWith(".svg")
+      ) {
+        alert("Only SVG files are allowed!");
+        return;
+      }
+
+      onFileSelect(file);
+    };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -37,9 +47,9 @@ export default function FileDropZone({
 
   return (
     <div
-      className={`w-full h-full rounded-md border-2 border-dashed flex flex-col justify-center items-center gap-2 cursor-pointer
-        transition-all duration-100
-        ${isDragging ? "border-green-500 bg-green-50" : "border-gray-300"}`}
+      className={`w-full h-full rounded-md flex flex-col justify-center 
+            items-center gap-2 cursor-pointer transition-all duration-100
+            ${isDragging && "border-green-500"}`}
       onClick={() => fileInputRef.current?.click()}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
