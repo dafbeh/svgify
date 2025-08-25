@@ -40,7 +40,7 @@ export default function Svgify() {
     }
 
     const generateCode = ({ svg, fill, stroke }: GenerateCodeProps): string => {
-        let jsx = svg
+        const jsx = svg
             .replace(/fill="[^"]*"/g, 'fill={fillColor}')
             .replace(/stroke="[^"]*"/g, 'stroke={strokeColor}')
             .replace(/<([a-z]+)([^>]*)><\/\1>/gi, '<$1$2 />')
