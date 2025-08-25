@@ -67,7 +67,7 @@ export default function ${name || selectedFile?.name}({ fillColor = "${fill}", s
                 <ThemeToggle />
             </div>
         <div className="flex flex-col min-h-screen font-sans bg-white 
-            dark:bg-[#2c2d30] pt-12">
+            dark:bg-[#2c2d30] md:pt-12 pt-5">
             {/* Main content */}
             <div className="flex-grow flex justify-center w-full">
                 <div className="flex flex-col xl:w-1/2 w-full xl:p-0 p-5">
