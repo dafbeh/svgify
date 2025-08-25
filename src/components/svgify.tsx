@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardAction,
@@ -14,12 +14,17 @@ import { Input } from '@/components/ui/input';
 import { Upload, FileImage, Eye, Layers, Palette, Code, Copy } from 'lucide-react';
 
 export default function Svgify() {
+    const [ fillColor, setFillColor ] = useState("#000000");
+    const [ strokeColor, setStrokeColor ] = useState("#000000");
+
     return (
-        <div className="flex justify-center w-full font-sans pb-12">
+        <>
+        <div className="relative flex justify-center w-full font-sans pb-12">
             <div className="flex flex-col xl:w-1/2 w-full xl:p-0 p-5">
                 <h1 className={`text-5xl font-bold`}>Svgify</h1>
                 <p className="pt-3">Upload, customize, and export SVG icons as React/Vue components or CSS backgrounds.</p>
                 <div className="flex grid md:grid-cols-2 grid-cols-1 gap-8 pt-8">
+
                     {/* Upload SVG */}
                     <Card className="h-95 text-center">
                         <CardHeader>
@@ -78,8 +83,16 @@ export default function Svgify() {
                                           <input className="w-9 h-9"
                                             type="color"
                                             id="fill"
+                                            value={fillColor}
+                                            onChange={(e) => setFillColor(e.target.value)}
                                             />
-                                            <Input className="mx-2 focus:outline-green-500" defaultValue="#000000" />
+                                            <Input className="mx-2 focus:outline-green-500 
+                                                focus-visible:ring-green-500" 
+                                                onChange={(e) => setFillColor(e.target.value)}
+                                                maxLength={7}
+                                                pattern="^#([0-9A-Fa-f]{0,6})$"
+                                                placeholder="#000000"
+                                                value={fillColor} />
                                         </div>
                                     </div>
 
@@ -89,8 +102,16 @@ export default function Svgify() {
                                           <input className="w-9 h-9"
                                             type="color"
                                             id="stroke"
+                                            value={strokeColor}
+                                            onChange={(e) => setStrokeColor(e.target.value)}
                                             />
-                                            <Input className="mx-2" defaultValue="#000000" />
+                                            <Input className="mx-2
+                                                focus-visible:ring-green-500"
+                                                onChange={(e) => setStrokeColor(e.target.value)}
+                                                maxLength={7}
+                                                pattern="^#([0-9A-Fa-f]{0,6})$"
+                                                placeholder="#000000"
+                                                value={strokeColor} />
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +128,7 @@ export default function Svgify() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Button variant="outline" className="mb-3 cursor-pointer">
+                            <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70">
                                 <Copy /> Copy
                             </Button>
                             <div className="w-full min-h-68 rounded-md
@@ -123,5 +144,13 @@ export default function Svgify() {
                 </div>
             </div>
         </div>
+
+        {/* Footer */}
+        <a href="https://dafbeh.xyz" target='_blank'>
+          <span className="absolute bottom-0 right-0 p-2 opacity-50">
+            dafbeh 2025
+          </span>
+        </a>
+        </>
     );
 }
