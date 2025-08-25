@@ -1,4 +1,3 @@
-import ThemeToggle from '../components/themeToggle';
 import Svgify from '../components/svgify';
 
 export default function Home() {

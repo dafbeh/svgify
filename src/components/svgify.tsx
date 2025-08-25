@@ -1,7 +1,7 @@
 "use client";
 import ThemeToggle from '../components/themeToggle';
 import FileDropZone from "./FileDropZone";
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -14,7 +14,8 @@ import { Upload, FileImage, Eye, Layers, Palette, Code, Copy } from 'lucide-reac
 
 export default function Svgify() {
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
-    const [svgContent, setSvgContent] = useState<string | null>(null);
+    const [ svgContent, setSvgContent ] = useState<string | null>(null);
+    const [ name, setName ] = useState<string>("");
     const [ fillColor, setFillColor ] = useState("#000000");
     const [ strokeColor, setStrokeColor ] = useState("#000000");
 
@@ -41,7 +42,7 @@ export default function Svgify() {
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-8 pt-8">
 
                         {/* Upload SVG */}
-                        <Card className="min-h-95 shadow-md">
+                        <Card className="fly-in-left min-h-95 shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Upload className="mr-2" strokeWidth={2} size="20" /> 
@@ -77,7 +78,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Preview */}
-                        <Card className="min-h-95 text-center shadow-md">
+                        <Card className="min-h-95 text-center shadow-md fly-in-top">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Eye className="mr-2" strokeWidth={2} size="20" /> 
@@ -89,7 +90,7 @@ export default function Svgify() {
                                     items-center gap-4">
                                     {selectedFile ? (
                                     <div
-                                      className="flex h-64 w-64 pt-15 items-center justify-center"
+                                      className="flex h-64 w-64 md:pt-15 items-center justify-center"
                                       dangerouslySetInnerHTML={{
                                         __html: svgContent
                                           ? svgContent
@@ -109,7 +110,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Customisation */}
-                        <Card className="min-h-95 shadow-md">
+                        <Card className="min-h-95 shadow-md fly-in-bot">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Palette className="mr-2" strokeWidth={2} size="20" /> 
@@ -117,6 +118,15 @@ export default function Svgify() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
+                                <div className="flex items-center pb-5 md:w-1/2 md:pr-2">
+                                    <p>Name</p>
+                                    <Input
+                                        className="mx-2 focus:outline-green-500 focus-visible:ring-green-500"
+                                        maxLength={30}
+                                        placeholder={selectedFile?.name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
                                 <div className="grid grid-cols-2 gap-4 w-full">
                                     {/* Fill Color */}
                                     <div className="flex flex-col">
@@ -164,7 +174,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Generated Code */}
-                        <Card className="min-h-95 shadow-md">
+                        <Card className="min-h-95 shadow-md fly-in-right">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Code className="mr-2" strokeWidth={2} size="20" /> 
