@@ -42,7 +42,7 @@ export default function Svgify() {
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-8 pt-8">
 
                         {/* Upload SVG */}
-                        <Card className="fly-in-left min-h-95 shadow-md">
+                        <Card className="min-h-95 shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Upload className="mr-2" strokeWidth={2} size="20" /> 
@@ -78,7 +78,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Preview */}
-                        <Card className="min-h-95 text-center shadow-md fly-in-top">
+                        <Card className="min-h-95 text-center shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Eye className="mr-2" strokeWidth={2} size="20" /> 
@@ -110,7 +110,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Customisation */}
-                        <Card className="min-h-95 shadow-md fly-in-bot">
+                        <Card className="min-h-95 shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Palette className="mr-2" strokeWidth={2} size="20" /> 
@@ -174,7 +174,7 @@ export default function Svgify() {
                         </Card>
 
                         {/* Generated Code */}
-                        <Card className="min-h-95 shadow-md fly-in-right">
+                        <Card className="min-h-95 shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center pl-1">
                                     <Code className="mr-2" strokeWidth={2} size="20" /> 
