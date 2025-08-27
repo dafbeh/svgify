@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Upload, FileImage, Eye, Layers, Palette, Code, Copy } from 'lucide-react';
 
 export default function Svgify() {
@@ -19,13 +20,20 @@ export default function Svgify() {
     const [ generatedCode, setGeneratedCode ] = useState<string>("");
     const [ fillColor, setFillColor ] = useState("#000000");
     const [ strokeColor, setStrokeColor ] = useState("#000000");
+    const [ outputMode, setOutputMode ] = useState("react");
 
     const handleFile = (file: File) => {
-      if (!file.type.includes("svg")) return;
-      const reader = new FileReader();
-      reader.onload = (e) => setSvgContent(e.target?.result as string);
-      reader.readAsText(file);
-      setSelectedFile(file);
+        if (!file.type.includes("svg")) return;
+        const reader = new FileReader();
+        reader.onload = (e) => setSvgContent(e.target?.result as string);
+        reader.readAsText(file);
+        setSelectedFile(file);
+        handleSetName(file.name.replace(/[^A-Za-z]/g, ""));
+    };
+
+    const handleSetName = (value: string) => {
+        const sanitized = value.replace(/[^A-Za-z]/g, "");
+        setName(sanitized);
     };
 
     const handleCopy = () => {
@@ -41,18 +49,23 @@ export default function Svgify() {
 
     const generateCode = ({ svg, fill, stroke }: GenerateCodeProps): string => {
         const jsx = svg
-            .replace(/fill="[^"]*"/g, 'fill={fillColor}')
-            .replace(/stroke="[^"]*"/g, 'stroke={strokeColor}')
-            .replace(/<([a-z]+)([^>]*)><\/\1>/gi, '<$1$2 />')
+            .replace(/^[\s\S]*?<svg/, '<svg')
+            .replace(/<\/svg>[\s\S]*$/, '</svg>')
+            .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
+            .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`)
             .replace(/\bclass=/g, 'className=');
-        return `
-import React from "react";
 
-export default function ${name || selectedFile?.name}({ fillColor = "${fill}", strokeColor = "${stroke}" }: { fillColor?: string; strokeColor?: string }) {
+        if(outputMode=="react"){
+        return `import React from "react";
+
+export default function ${name || selectedFile?.name}() {
   return (
     ${jsx}
   );
-}`;
+}`;            
+        } else {
+            return jsx;
+        }
     };
 
     const handleGenerateCode = () => {
@@ -72,7 +85,7 @@ export default function ${name || selectedFile?.name}({ fillColor = "${fill}", s
             <div className="flex-grow flex justify-center w-full">
                 <div className="flex flex-col xl:w-1/2 w-full xl:p-0 p-5">
                     <h1 className="text-5xl font-bold">Svgify</h1>
-                    <p className="pt-3">Upload, customize, and export SVG icons as React/Vue components or CSS backgrounds.</p>
+                    <p className="pt-3">Upload, customise, and export SVG icons as React or HTML components.</p>
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-8 pt-8">
 
                         {/* Upload SVG */}
@@ -157,8 +170,8 @@ export default function ${name || selectedFile?.name}({ fillColor = "${fill}", s
                                     <Input
                                         className="mx-2 focus:outline-green-500 focus-visible:ring-green-500"
                                         maxLength={30}
-                                        placeholder={selectedFile?.name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder={name}
+                                        onChange={(e) => handleSetName(e.target.value)}
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 w-full">
@@ -216,16 +229,23 @@ export default function ${name || selectedFile?.name}({ fillColor = "${fill}", s
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <Button variant="outline" className="mb-3 mr-3 cursor-pointer 
-                                    bg-green-400 hover:bg-green-500"
-                                    onClick={handleGenerateCode}>
-                                    <Copy /> Generate Code
-                                </Button>
+                                <Tabs value={outputMode} onValueChange={setOutputMode} className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2">
+                                      <TabsTrigger value="react">React</TabsTrigger>
+                                      <TabsTrigger value="html">HTML</TabsTrigger>
+                                    </TabsList>
+                                <div className="pt-2">
+                                    <Button variant="outline" className="mb-3 mr-3 cursor-pointer 
+                                        bg-green-400 hover:bg-green-500"
+                                        onClick={handleGenerateCode}>
+                                        <Copy /> Generate Code
+                                    </Button>
 
-                                <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70"
-                                onClick={handleCopy}>
-                                    <Copy /> Copy
-                                </Button>
+                                    <Button variant="outline" className="mb-3 cursor-pointer hover:bg-gray-200/70"
+                                    onClick={handleCopy}>
+                                        <Copy /> Copy
+                                    </Button>
+                                </div>
                                 <div className="w-full min-h-68 rounded-md flex flex-col justify-center items-center gap-4">
                                     <textarea
                                         className="w-full min-h-68 px-2 pb-5 focus:ring-2 text-sm font-mono ring-green-500 
@@ -235,6 +255,7 @@ export default function ${name || selectedFile?.name}({ fillColor = "${fill}", s
                                         readOnly
                                     />
                                 </div>
+                                </Tabs>
                             </CardContent>
                         </Card>
                     </div>

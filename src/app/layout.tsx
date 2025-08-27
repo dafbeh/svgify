@@ -34,7 +34,7 @@ export default function RootLayout({
       />
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
-          antialiased`}
+          antialiased overflow-x-hidden`}
       >
         <ThemeProvider
           attribute="class"
