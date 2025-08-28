@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🖌️ Svgify  
+*Upload, customise, and export SVG icons as React or HTML components*  
 
-## Getting Started
+![Svgify Screenshot](https://dafbeh.xyz/Projects/Svgify/Svgify-1.png)
 
-First, run the development server:
+## ✨ Overview  
+**Svgify** is a lightweight utility designed to streamline working with SVG icons in modern web projects.  
+With Svgify, you can upload any SVG file and instantly preview it in the browser. The tool provides easy customisation options such as updating the icon’s name, fill color, and stroke color. Once customised, you can generate ready-to-use code snippets for React or plain HTML.  
+
+This project is perfect for developers who want to save time and maintain consistency when integrating SVG icons into their apps.  
+
+## 🚀 Features  
+- 📤 **Upload SVG** – Drag & drop or browse for your SVG files  
+- 👀 **Live Preview** – See your icon rendered instantly  
+- 🎨 **Customisation** – Update icon name, fill color, and stroke color  
+- 📝 **Code Generation** – Generate ready-to-use React or HTML components  
+- 📋 **Copy to Clipboard** – Copy generated code with one click  
+- ⚡ Lightweight, fast, and easy to use  
+
+## 🛠 Tech Stack  
+- Next.js – React framework with App Router  
+- Tailwind CSS – Utility-first styling  
+- TypeScript – Safer and cleaner code  
+
+## 📦 Installation  
 
 ```bash
+git clone https://github.com/dafbeh/svgify.git
+cd svgify
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000) in your browser.  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Usage  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Upload an SVG file using the upload area.  
+2. Preview the icon in the browser.  
+3. Update the icon's **name**, **fill color**, and **stroke color**.  
+4. Select your preferred output: **React** or **HTML**.  
+5. Click **Generate Code** and copy the snippet to your project.  
 
-## Learn More
+## 🌟 Demo  
+[Live Demo Here](https://svgify.vercel.app/)  
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+⚡ Made with love by [dafbeh](https://github.com/dafbeh)
