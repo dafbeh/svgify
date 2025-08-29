@@ -1,7 +1,7 @@
 "use client";
 import ThemeToggle from '../components/themeToggle';
 import FileDropZone from "./FileDropZone";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Upload, FileImage, Eye, Layers, Palette, Code, Copy } from 'lucide-react';
 
@@ -18,6 +19,8 @@ export default function Svgify() {
     const [ svgContent, setSvgContent ] = useState<string | null>(null);
     const [ name, setName ] = useState<string>("");
     const [ generatedCode, setGeneratedCode ] = useState<string>("");
+    const [ size, setSize ] = useState<number>(220);
+    const [ debounceSize, setDebounceSize ] = useState<number>(220);
     const [ fillColor, setFillColor ] = useState("#000000");
     const [ strokeColor, setStrokeColor ] = useState("#000000");
     const [ outputMode, setOutputMode ] = useState("react");
@@ -41,16 +44,26 @@ export default function Svgify() {
       navigator.clipboard.writeText(generatedCode);
     };
 
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebounceSize(size);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }, [size]);
+
     interface GenerateCodeProps {
         svg: string;
         fill: string;
         stroke: string;
     }
 
-    const generateCode = ({ svg, fill, stroke }: GenerateCodeProps): string => {
+    const generateCode = ({ svg }: GenerateCodeProps): string => {
         const jsx = svg
             .replace(/^[\s\S]*?<svg/, '<svg')
             .replace(/<\/svg>[\s\S]*$/, '</svg>')
+            .replace(/width="[^"]*"/, `width=${debounceSize}`)
+            .replace(/height="[^"]*"/, `height=${debounceSize}`)
             .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
             .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`)
             .replace(/\bclass=/g, 'className=');
@@ -141,8 +154,10 @@ export default function ${name || selectedFile?.name}() {
                                       dangerouslySetInnerHTML={{
                                         __html: svgContent
                                           ? svgContent
-                                              .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
-                                              .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`)
+                                            .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
+                                            .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`)
+                                            .replace(/width="[^"]*"/, `width="${debounceSize}"`)
+                                            .replace(/height="[^"]*"/, `height="${debounceSize}"`)
                                           : "",
                                       }}
                                     />
@@ -165,9 +180,17 @@ export default function ${name || selectedFile?.name}() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
+                                <div className=" w-full">
+                                    <div className="flex w-full justify-between">
+                                        <p>Size</p>
+                                        <p>{size}x{size} px</p>
+                                    </div>
+                                    <Slider disabled={!selectedFile} className="py-3 pb-6" defaultValue={[220]} max={260} min={12}
+                                        step={1} onValueChange={(val) => setSize(val[0])} />
+                                </div>
                                 <div className="flex items-center pb-5 md:w-1/2 md:pr-2">
                                     <p>Name</p>
-                                    <Input
+                                    <Input disabled={!selectedFile}
                                         className="mx-2 focus:outline-green-500 focus-visible:ring-green-500"
                                         maxLength={30}
                                         placeholder={name}
@@ -179,13 +202,13 @@ export default function ${name || selectedFile?.name}() {
                                     <div className="flex flex-col">
                                         <p>Fill Colour</p>
                                         <div className="pt-2 flex items-center">
-                                          <input
+                                          <input disabled={!selectedFile}
                                             className="w-9 h-9"
                                             type="color"
                                             value={fillColor}
                                             onChange={(e) => setFillColor(e.target.value)}
                                           />
-                                          <Input
+                                          <Input disabled={!selectedFile}
                                             className="mx-2 focus:outline-green-500 focus-visible:ring-green-500"
                                             onChange={(e) => setFillColor(e.target.value)}
                                             maxLength={7}
@@ -200,13 +223,13 @@ export default function ${name || selectedFile?.name}() {
                                     <div className="flex flex-col">
                                         <p>Stroke Colour</p>
                                         <div className="pt-2 flex items-center">
-                                          <input
+                                          <input disabled={!selectedFile}
                                             className="w-9 h-9"
                                             type="color"
                                             value={strokeColor}
                                             onChange={(e) => setStrokeColor(e.target.value)}
                                           />
-                                          <Input
+                                          <Input disabled={!selectedFile}
                                             className="mx-2 focus-visible:ring-green-500"
                                             onChange={(e) => setStrokeColor(e.target.value)}
                                             maxLength={7}
